@@ -1,0 +1,88 @@
+/**
+ * This class defines a Student with several fields.
+ * The class also provides methods to sort an array of Students
+ * by various fields.
+ */
+public class Student implements Comparable<Student> {
+    // Fields
+    private String name;
+    private int id;
+    private double gpa;
+    private int year;
+    private String major;
+    
+    /**
+     * Constructor to create a new Student object with the given fields.
+     * @param name the name of the student
+     * @param id the ID of the student
+     * @param gpa the GPA of the student
+     * @param year the year of the student
+     * @param major the major of the student
+     */
+    public Student(String name, int id, double gpa, int year, String major) {
+        this.name = name;
+        this.id = id;
+        this.gpa = gpa;
+        this.year = year;
+        this.major = major;
+    }
+    
+    // Getters and setters for all fields omitted for brevity
+    
+    /**
+     * Compares this student to another student based on their GPA.
+     * @param other the other student to compare to
+     * @return a negative number if this student has a lower GPA,
+     *         a positive number if this student has a higher GPA,
+     *         and 0 if the two students have the same GPA
+     */
+    @Override
+    public int compareTo(Student other) {
+        return Double.compare(this.gpa, other.gpa);
+    }
+    
+    /**
+     * Sorts an array of Students by their GPA in ascending order.
+     * @param students the array of students to sort
+     */
+    public static void sortByGPA(Student[] students) {
+        Arrays.sort(students);
+    }
+    
+    /**
+     * Sorts an array of Students by their ID in descending order.
+     * @param students the array of students to sort
+     */
+    public static void sortByIdDescending(Student[] students) {
+        Arrays.sort(students, Collections.reverseOrder(Comparator.comparing(Student::getId)));
+    }
+    
+    /**
+     * Main method to execute the program and test the sorting methods.
+     * @param args command-line arguments (not used)
+     */
+    public static void main(String[] args) {
+        // Create an array of students
+        Student[] students = {
+            new Student("Alice", 123, 3.5, 2, "Computer Science"),
+            new Student("Bob", 456, 3.2, 3, "Mathematics"),
+            new Student("Charlie", 789, 3.9, 1, "Biology")
+        };
+        
+        // Sort the array by GPA in ascending order
+        sortByGPA(students);
+        System.out.println("Sorted by GPA in ascending order:");
+        for (Student student : students) {
+            System.out.println(student.getName() + " (" + student.getGPA() + ")");
+        }
+        System.out.println();
+        
+        // Sort the array by ID in descending order
+        sortByIdDescending(students);
+        System.out.println("Sorted by ID in descending order:");
+        for (Student student : students) {
+            System.out.println(student.getName() + " (" + student.getId() + ")");
+        }
+        System.out.println();
+    }
+}
