@@ -1,0 +1,96 @@
+import java.util.*;
+
+public class AlphabeticalWords {
+    public static void main(String[] args) {
+        String text = "hello world goodbye world";
+        try {
+            Text myText = new Text(text);
+            String result = myText.getSortedText();
+            System.out.println(result);
+        } catch (Exception e) {
+            System.out.println("Error occurred: " + e.getMessage());
+        }
+    }
+}
+
+class Text {
+    private List<Sentence> sentences;
+    
+    public Text(String text) {
+        this.sentences = new ArrayList<Sentence>();
+        String[] sentenceStrings = text.split("[.!?]\\s*");
+        for (String sentenceString : sentenceStrings) {
+            Sentence sentence = new Sentence(sentenceString);
+            this.sentences.add(sentence);
+        }
+    }
+    
+    public String getSortedText() {
+        StringBuilder result = new StringBuilder();
+        for (Sentence sentence : this.sentences) {
+            result.append(sentence.getSortedSentence());
+            result.append(" ");
+        }
+        return result.toString().trim();
+    }
+}
+
+class Sentence {
+    private List<Object> wordsAndPunctuation;
+    
+    public Sentence(String sentenceString) {
+        this.wordsAndPunctuation = new ArrayList<Object>();
+        String[] wordsAndPunctuationStrings = sentenceString.split("\\s+");
+        for (String wordOrPunctuationString : wordsAndPunctuationStrings) {
+            if (isPunctuation(wordOrPunctuationString)) {
+                this.wordsAndPunctuation.add(wordOrPunctuationString);
+            } else {
+                Word word = new Word(wordOrPunctuationString);
+                this.wordsAndPunctuation.add(word);
+            }
+        }
+    }
+    
+    private boolean isPunctuation(String s) {
+        return s.matches("\\p{Punct}");
+    }
+    
+    public String getSortedSentence() {
+        List<Object> sortedWordsAndPunctuation = new ArrayList<Object>(this.wordsAndPunctuation);
+        Collections.sort(sortedWordsAndPunctuation, new WordComparator());
+        StringBuilder result = new StringBuilder();
+        for (Object wordOrPunctuation : sortedWordsAndPunctuation) {
+            result.append(wordOrPunctuation.toString());
+            result.append(" ");
+        }
+        return result.toString().trim();
+    }
+    
+    class WordComparator implements Comparator<Object> {
+        public int compare(Object o1, Object o2) {
+            if (o1 instanceof Word && o2 instanceof Word) {
+                Word w1 = (Word) o1;
+                Word w2 = (Word) o2;
+                return w1.getWord().compareTo(w2.getWord());
+            } else {
+                return 0;
+            }
+        }
+    }
+}
+
+class Word {
+    private String word;
+    
+    public Word(String word) {
+        this.word = word;
+    }
+    
+    public String getWord() {
+        return this.word;
+    }
+    
+    public String toString() {
+        return this.word;
+    }
+}
