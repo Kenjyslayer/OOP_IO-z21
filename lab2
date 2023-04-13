@@ -1,0 +1,55 @@
+import java.util.Arrays;
+
+public class MatrixOperation {
+    private byte[][] A;
+    private byte[][] B;
+    private byte[][] C;
+    
+    public MatrixOperation(byte[][] A, byte[][] B) {
+        this.A = A;
+        this.B = B;
+    }
+    
+    public void executor() {
+        try {
+            int rows = A.length;
+            int cols = A[0].length;
+            
+            if (B.length != rows || B[0].length != cols) {
+                throw new IllegalArgumentException("Matrices must have the same dimensions");
+            }
+            
+            C = new byte[rows][cols];
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    C[i][j] = (byte) (A[i][j] + B[i][j]);
+                }
+            }
+            
+            // Calculate the sum of the smallest elements of each column
+            int[] minColSum = new int[cols];
+            Arrays.fill(minColSum, Integer.MAX_VALUE);
+            for (int j = 0; j < cols; j++) {
+                for (int i = 0; i < rows; i++) {
+                    if (C[i][j] < minColSum[j]) {
+                        minColSum[j] = C[i][j];
+                    }
+                }
+            }
+            
+            // Display the results
+            System.out.println("Matrix C = A + B:");
+            printMatrix(C);
+            System.out.println("Sum of smallest elements in each column: " + Arrays.toString(minColSum));
+            
+        } catch (Exception e) {
+            System.out.println("Error occurred: " + e.getMessage());
+        }
+    }
+    
+    private void printMatrix(byte[][] matrix) {
+        for (byte[] row : matrix) {
+            System.out.println(Arrays.toString(row));
+        }
+    }
+}
