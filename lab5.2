@@ -1,0 +1,121 @@
+import java.util.*;
+
+public class AlphabeticalWords {
+    public static void main(String[] args) {
+        String text = "hello world goodbye world";
+        try {
+            Text myText = new Text(text);
+            System.out.println(myText.sortWords());
+        } catch (Exception e) {
+            System.out.println("Error occurred: " + e.getMessage());
+        }
+    }
+}
+
+class Letter {
+    private char value;
+    
+    public Letter(char value) {
+        this.value = value;
+    }
+    
+    public char getValue() {
+        return value;
+    }
+    
+    @Override
+    public String toString() {
+        return Character.toString(value);
+    }
+}
+
+class Word {
+    private List<Letter> letters;
+    
+    public Word(String text) {
+        this.letters = new ArrayList<Letter>();
+        for (char c : text.toCharArray()) {
+            letters.add(new Letter(c));
+        }
+    }
+    
+    public List<Letter> getLetters() {
+        return letters;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Letter letter : letters) {
+            result.append(letter.toString());
+        }
+        return result.toString();
+    }
+}
+
+class Sentence {
+    private List<Object> elements;
+    
+    public Sentence(String text) {
+        this.elements = new ArrayList<Object>();
+        String[] parts = text.split("(?<=\\p{Punct}|\\s)|(?=\\p{Punct}|\\s)");
+        for (String part : parts) {
+            if (part.matches("\\p{Punct}")) {
+                this.elements.add(part);
+            } else {
+                this.elements.add(new Word(part));
+            }
+        }
+    }
+    
+    public List<Object> getElements() {
+        return elements;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Object element : elements) {
+            result.append(element.toString());
+        }
+        return result.toString();
+    }
+}
+
+class Text {
+    private List<Sentence> sentences;
+    
+    public Text(String text) {
+        this.sentences = new ArrayList<Sentence>();
+        String[] parts = text.split("(?<=[.!?])\\s*");
+        for (String part : parts) {
+            this.sentences.add(new Sentence(part));
+        }
+    }
+    
+    public List<Sentence> getSentences() {
+        return sentences;
+    }
+    
+    public String sortWords() {
+        Set<Word> words = new TreeSet<Word>(new Comparator<Word>() {
+            @Override
+            public int compare(Word w1, Word w2) {
+                return w1.toString().compareTo(w2.toString());
+            }
+        });
+        for (Sentence sentence : sentences) {
+            for (Object element : sentence.getElements()) {
+                if (element instanceof Word) {
+                    words.add((Word) element);
+                }
+            }
+        }
+        StringBuilder result = new StringBuilder();
+        for (Word word : words) {
+            result.append(word.toString());
+            result.append(" ");
+        }
+        return result.toString().trim();
+    }
+}
