@@ -1,0 +1,21 @@
+import java.util.*;
+
+public class AlphabeticalWords {
+    public static void main(String[] args) {
+        String text = "hello world goodbye world";
+        try {
+            Set<String> words = new TreeSet<String>();
+            StringBuilder result = new StringBuilder();
+            for (String word : text.split("\\s+")) {
+                words.add(word);
+            }
+            for (String word : words) {
+                result.append(word);
+                result.append(" ");
+            }
+            System.out.println(result.toString().trim());
+        } catch (Exception e) {
+            System.out.println("Error occurred: " + e.getMessage());
+        }
+    }
+}
