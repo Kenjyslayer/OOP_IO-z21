@@ -1,0 +1,148 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+// Base class for aircraft
+class Aircraft {
+    private String model;
+    private int passengerCapacity;
+    private int cargoCapacity;
+    private double fuelConsumption;
+    private double flightRange;
+
+    public Aircraft(String model, int passengerCapacity, int cargoCapacity,
+            double fuelConsumption, double flightRange) {
+        this.model = model;
+        this.passengerCapacity = passengerCapacity;
+        this.cargoCapacity = cargoCapacity;
+        this.fuelConsumption = fuelConsumption;
+        this.flightRange = flightRange;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public int getPassengerCapacity() {
+        return passengerCapacity;
+    }
+
+    public int getCargoCapacity() {
+        return cargoCapacity;
+    }
+
+    public double getFuelConsumption() {
+        return fuelConsumption;
+    }
+
+    public double getFlightRange() {
+        return flightRange;
+    }
+}
+
+// Descendant class for passenger planes
+class PassengerAircraft extends Aircraft {
+    public PassengerAircraft(String model, int passengerCapacity, int cargoCapacity,
+            double fuelConsumption, double flightRange) {
+        super(model, passengerCapacity, cargoCapacity, fuelConsumption, flightRange);
+    }
+}
+
+// Descendant class for cargo planes
+class CargoAircraft extends Aircraft {
+    public CargoAircraft(String model, int passengerCapacity, int cargoCapacity,
+            double fuelConsumption, double flightRange) {
+        super(model, passengerCapacity, cargoCapacity, fuelConsumption, flightRange);
+    }
+}
+
+// Descendant class for planes that can carry both passengers and cargo
+class CombinationAircraft extends Aircraft {
+    public CombinationAircraft(String model, int passengerCapacity, int cargoCapacity,
+            double fuelConsumption, double flightRange) {
+        super(model, passengerCapacity, cargoCapacity, fuelConsumption, flightRange);
+    }
+}
+
+// Class for the airline
+class Airline {
+    private ArrayList<Aircraft> fleet = new ArrayList<Aircraft>();
+
+    public void addAircraft(Aircraft aircraft) {
+        fleet.add(aircraft);
+    }
+
+    public int getTotalCapacity() {
+        int totalCapacity = 0;
+        for (Aircraft aircraft : fleet) {
+            totalCapacity += aircraft.getPassengerCapacity();
+        }
+        return totalCapacity;
+    }
+
+    public int getCargoCapacity() {
+        int cargoCapacity = 0;
+        for (Aircraft aircraft : fleet) {
+            cargoCapacity += aircraft.getCargoCapacity();
+        }
+        return cargoCapacity;
+    }
+
+    public ArrayList<Aircraft> sortByFlightRange() {
+        ArrayList<Aircraft> sortedFleet = new ArrayList<Aircraft>(fleet);
+        Collections.sort(sortedFleet, new Comparator<Aircraft>() {
+            @Override
+            public int compare(Aircraft a1, Aircraft a2) {
+                if (a1.getFlightRange() < a2.getFlightRange()) {
+                    return -1;
+                } else if (a1.getFlightRange() > a2.getFlightRange()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        return sortedFleet;
+    }
+
+    public Aircraft findAircraftByFuelConsumption(double fuelConsumption) throws Exception {
+        for (Aircraft aircraft : fleet) {
+            if (aircraft.getFuelConsumption() == fuelConsumption) {
+                return aircraft;
+            }
+        }
+        throw new Exception("No aircraft found with fuel consumption " + fuelConsumption);
+    }
+}
+
+// Class for the array of objects
+class AirlineOperations {
+    private Airline[] airlines;
+
+    public AirlineOperations(int numAirlines) {
+        airlines = new Airline[numAirlines];
+        for (int i = 0; i < numAirlines; i++) {
+            airlines[i] = new Airline();
+        }
+    }
+
+    public void addAircraft(int airlineIndex, Aircraft aircraft) {
+        airlines[airlineIndex].addAircraft(aircraft);
+    }
+
+    public int getTotalCapacity(int airlineIndex) {
+        return airlines[airlineIndex].getTotalCapacity();
+    }
+
+    public int getCargoCapacity(int airlineIndex) {
+        return airlines[airlineIndex].getCargoCapacity();
+    }
+
+    public ArrayList<Aircraft> sortByFlightRange(int airlineIndex) {
+        return airlines[airlineIndex].sortByFlightRange();
+    }
+
+    public Aircraft findAircraftByFuelConsumption(int airlineIndex, double fuelConsumption) throws Exception {
+        return airlines[airlineIndex].findAircraftByFuelConsumption(fuelConsumption);
+    }
+}
